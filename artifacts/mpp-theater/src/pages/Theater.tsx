@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "wouter";
 import { fetchFilmInfo, unlockStream, probeExtension, formatDuration, type FilmInfo, type StreamResult } from "@/lib/mpp";
-import { Zap, Clock, Calendar, AlertTriangle, Loader2, Play, X, ExternalLink } from "lucide-react";
+import { Zap, Clock, Calendar, AlertTriangle, Loader2, X, ExternalLink, ChevronLeft } from "lucide-react";
 
 type Phase =
   | { kind: "loading" }
@@ -74,14 +75,20 @@ export default function Theater() {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="border-b border-border px-6 py-4 flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded bg-primary flex items-center justify-center">
-            <Zap className="w-4 h-4 text-primary-foreground" strokeWidth={2.5} />
+        <Link
+          href="/"
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span>TIPT Sandbox</span>
+        </Link>
+        <span className="text-border">/</span>
+        <span className="text-sm font-medium text-foreground">Video On-Demand</span>
+        <div className="ml-auto flex items-center gap-2">
+          <div className="w-5 h-5 rounded bg-primary flex items-center justify-center">
+            <Zap className="w-3 h-3 text-primary-foreground" strokeWidth={2.5} />
           </div>
-          <span className="font-semibold tracking-tight text-foreground text-lg">MPP Theater</span>
-        </div>
-        <div className="ml-auto text-xs text-muted-foreground">
-          Powered by Lightning Network
+          <span className="text-xs text-muted-foreground">Lightning</span>
         </div>
       </header>
 
