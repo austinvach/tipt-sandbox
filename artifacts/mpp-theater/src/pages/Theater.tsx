@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { fetchFilmInfo, unlockStream, probeExtension, formatDuration, type FilmInfo, type StreamResult } from "@/lib/mpp";
 import { Zap, Clock, Calendar, AlertTriangle, Loader2, X, ExternalLink, ChevronLeft } from "lucide-react";
+import tiptLogo from "@assets/tiptgreen_1781472935194.svg";
 
 type Phase =
   | { kind: "loading" }
@@ -80,7 +81,8 @@ export default function Theater() {
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
-          <span>TIPT Sandbox</span>
+          <img src={tiptLogo} alt="TIPT" className="w-5 h-5" />
+          <span>Sandbox</span>
         </Link>
         <span className="text-border">/</span>
         <span className="text-sm font-medium text-foreground">Video On-Demand</span>

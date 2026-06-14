@@ -1,5 +1,6 @@
 import { Link } from "wouter";
-import { Zap, Film, Lock } from "lucide-react";
+import { Film, Lock } from "lucide-react";
+import tiptLogo from "@assets/tiptgreen_1781472935194.svg";
 
 interface Tile {
   slug: string;
@@ -39,11 +40,9 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-border px-6 py-4 flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded bg-primary flex items-center justify-center">
-            <Zap className="w-4 h-4 text-primary-foreground" strokeWidth={2.5} />
-          </div>
+          <img src={tiptLogo} alt="TIPT" className="w-8 h-8" />
           <span className="font-semibold tracking-tight text-foreground text-lg">
-            TIPT Sandbox
+            Sandbox
           </span>
         </div>
         <div className="ml-auto text-xs text-muted-foreground">
