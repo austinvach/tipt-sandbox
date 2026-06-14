@@ -24,9 +24,11 @@ export async function fetchFilmInfo(): Promise<FilmInfo> {
 }
 
 export async function probeExtension(timeoutMs = 1500): Promise<boolean> {
+  console.log("[mpp] probeExtension: sending mpp:extension request event");
   return new Promise((resolve) => {
     const timer = setTimeout(() => {
       window.removeEventListener("mpp:extension", handler);
+      console.log("[mpp] probeExtension: timed out — no extension response");
       resolve(false);
     }, timeoutMs);
 
@@ -35,6 +37,7 @@ export async function probeExtension(timeoutMs = 1500): Promise<boolean> {
       if (detail?.type === "response") {
         clearTimeout(timer);
         window.removeEventListener("mpp:extension", handler);
+        console.log("[mpp] probeExtension: extension responded", detail);
         resolve(true);
       }
     };
@@ -53,9 +56,12 @@ export async function probeExtension(timeoutMs = 1500): Promise<boolean> {
 }
 
 export async function unlockStream(): Promise<StreamResult> {
+  console.log("[mpp] unlockStream: step 1 — requesting stream (expecting 402)");
   const r1 = await fetch(`${BASE}/theater/stream`);
+  console.log("[mpp] unlockStream: step 1 response status", r1.status);
 
   if (r1.ok) {
+    console.log("[mpp] unlockStream: stream already unlocked (no payment needed)");
     return r1.json();
   }
 
@@ -64,19 +70,23 @@ export async function unlockStream(): Promise<StreamResult> {
   }
 
   const challenge = r1.headers.get("WWW-Authenticate");
+  console.log("[mpp] unlockStream: step 2 — got 402, WWW-Authenticate:", challenge);
   if (!challenge) throw new Error("No payment challenge received from server");
 
   const id = challenge.match(/id="([^"]+)"/)?.[1];
   const reqB64 = challenge.match(/request="([^"]+)"/)?.[1];
+  console.log("[mpp] unlockStream: parsed challenge id:", id, "| base64 length:", reqB64?.length);
   if (!id || !reqB64) throw new Error("Could not parse payment challenge");
 
   let challengeData: unknown;
   try {
     challengeData = JSON.parse(atob(reqB64));
+    console.log("[mpp] unlockStream: decoded challenge payload:", challengeData);
   } catch {
     throw new Error("Could not decode payment challenge payload");
   }
 
+  console.log("[mpp] unlockStream: step 3 — dispatching mpp:challenge, waiting for mpp:credential...");
   const credential = await new Promise<{ ph: string; preimage: string }>(
     (resolve, reject) => {
       const timer = setTimeout(
@@ -87,6 +97,7 @@ export async function unlockStream(): Promise<StreamResult> {
       const handler = (e: Event) => {
         clearTimeout(timer);
         const detail = (e as CustomEvent).detail ?? {};
+        console.log("[mpp] unlockStream: step 4 — mpp:credential received", detail);
         resolve({
           ph: detail.paymentHash ?? detail.ph ?? "",
           preimage: detail.preimage ?? "",
@@ -103,17 +114,21 @@ export async function unlockStream(): Promise<StreamResult> {
     }
   );
 
+  console.log("[mpp] unlockStream: step 5 — submitting proof | ph:", credential.ph, "| preimage:", credential.preimage);
   const r2 = await fetch(`${BASE}/theater/stream`, {
     headers: {
       Authorization: `Payment id="${id}", ph="${credential.ph}", preimage="${credential.preimage}"`,
     },
   });
+  console.log("[mpp] unlockStream: step 5 response status", r2.status);
 
   if (!r2.ok) {
     throw new Error(`Stream unlock failed: ${r2.status} ${r2.statusText}`);
   }
 
-  return r2.json();
+  const result = await r2.json();
+  console.log("[mpp] unlockStream: success — stream URL:", result.url);
+  return result;
 }
 
 export function formatDuration(seconds: number): string {

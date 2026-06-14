@@ -224,29 +224,33 @@ function FilmCard({
                 </div>
               )}
 
-              {/* Watch button */}
-              <button
-                onClick={onWatch}
-                disabled={paying}
-                className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-base hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
-              >
-                {paying ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Waiting for payment...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-5 h-5" strokeWidth={2.5} />
-                    Pay &amp; Watch
-                  </>
-                )}
-              </button>
+              {/* Watch button — only shown when extension is detected */}
+              {hasExtension === true && (
+                <>
+                  <button
+                    onClick={onWatch}
+                    disabled={paying}
+                    className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-base hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
+                  >
+                    {paying ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Waiting for payment...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-5 h-5" strokeWidth={2.5} />
+                        Pay &amp; Watch
+                      </>
+                    )}
+                  </button>
 
-              {paying && (
-                <p className="text-center text-xs text-muted-foreground">
-                  Approve the payment in your Lightning wallet extension
-                </p>
+                  {paying && (
+                    <p className="text-center text-xs text-muted-foreground">
+                      Approve the payment in your Lightning wallet extension
+                    </p>
+                  )}
+                </>
               )}
             </>
           ) : (
