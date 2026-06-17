@@ -1,6 +1,6 @@
 # Sandbox Workspace
 
-This folder is a `pnpm` monorepo used for sandboxed artifacts and supporting packages.
+This folder is a `pnpm` monorepo used for sandboxed artifacts and supporting packages. It provides a full-stack Lightning 402 payment demo environment.
 
 ## Prerequisites
 
@@ -8,11 +8,12 @@ This folder is a `pnpm` monorepo used for sandboxed artifacts and supporting pac
 - pnpm 10+
 - A bash-like shell on Windows (Git Bash/WSL) is recommended
 
-Notes:
+**Notes:**
 - The workspace enforces `pnpm` via a preinstall check.
 - Some scripts (for example the API server `dev` script) use shell syntax that works best in bash.
+- This project was originally developed in Replit but can run entirely locally.
 
-## Install dependencies
+## Setup
 
 From this folder:
 
@@ -49,48 +50,46 @@ Project-level standardized commands:
 - MPP theater (`@workspace/mpp-theater`): `dev`, `typecheck`, `build`, `preview`.
 - Shared libs (`@workspace/api-zod`, `@workspace/db`): `typecheck`, `build`.
 
-## Run artifacts locally
+## Running the Applications Locally
 
-### API server
+### Start the API server first (proxies to upstream Replit deployment)
 
 ```bash
 pnpm --filter @workspace/api-server run dev
 ```
 
-Required environment variable:
+The API server will run on `http://localhost:5000`.
 
-- `DATABASE_URL`: Postgres connection string
+### Mockup sandbox (standalone UI, no backend needed)
 
-If you do not have a database available yet, start one first and then run the command above.
-
-### Mockup sandbox (Vite app)
+In a new terminal:
 
 ```bash
 pnpm --filter @workspace/mockup-sandbox run dev
 ```
 
-Vite will print the local URL in the terminal (typically `http://localhost:5173`).
+Vite will print the local URL (typically `http://localhost:5173`).
 
-### MPP theater (Vite app)
+### MPP Theater (full payment demo, requires API server)
+
+In a new terminal (after API server is running):
 
 ```bash
 pnpm --filter @workspace/mpp-theater run dev
 ```
 
-Vite will print the local URL in the terminal. The app includes two experiments:
+Vite will print the local URL. The app includes two experiments:
 
-- `/vod` (Video On-Demand)
+- `/vod` (Video On-Demand) - Requires the API server running
 - `/sdk-demo` (SDK Payment Playground)
 
 ## Helpful package-level commands
 
 ```bash
 pnpm --filter @workspace/api-spec run codegen
-pnpm --filter @workspace/db run push
 ```
 
 - `codegen`: regenerate API hooks and schemas from OpenAPI
-- `push`: push DB schema changes for development
 
 ## Troubleshooting
 
@@ -101,11 +100,3 @@ pnpm --filter @workspace/db run push
 pnpm --filter @workspace/api-server run build
 pnpm --filter @workspace/api-server run start
 ```
-- If `/vod` shows `Unexpected token '<'` or `<!DOCTYPE ... is not valid JSON`, start both services and keep them running:
-
-```bash
-pnpm --filter @workspace/api-server run dev
-pnpm --filter @workspace/mpp-theater run dev
-```
-
-This happens when the UI receives HTML (Vite index page) instead of JSON from `/api/theater/info`.
