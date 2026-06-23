@@ -69,6 +69,14 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
     proxy: {
+      "/api/titles": {
+        target: "https://mpptheater.replit.app",
+        changeOrigin: true,
+      },
+      "/api/stream": {
+        target: "https://mpptheater.replit.app",
+        changeOrigin: true,
+      },
       "/api": {
         target: process.env.API_BASE_URL || "http://localhost:5000",
         changeOrigin: true,

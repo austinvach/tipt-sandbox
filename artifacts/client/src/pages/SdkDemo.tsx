@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "wouter";
 import { createLightningMppExtensionClient } from "lightning-mpp-extension-sdk";
+import AppHeader from "@/components/AppHeader";
 
 type LogEntry = {
   id: string;
@@ -197,17 +197,7 @@ export default function SdkDemo() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border px-6 py-4 flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold">TIPT SDK Sandbox</h1>
-          <p className="text-xs text-muted-foreground">
-            Fake 402 flow routed through the local SDK and TIPT extension.
-          </p>
-        </div>
-        <Link href="/" className="text-sm text-primary hover:underline">
-          Back to demos
-        </Link>
-      </header>
+      <AppHeader pageTitle="SDK Payment Playground" />
 
       <main className="max-w-5xl mx-auto px-6 py-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <section className="rounded-2xl border border-border bg-card p-6 space-y-6">

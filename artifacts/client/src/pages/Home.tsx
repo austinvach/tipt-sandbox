@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Film, Wallet } from "lucide-react";
-import tiptLogo from "@assets/tiptgreen_1781472935194.svg";
+import AppHeader from "@/components/AppHeader";
 
 interface Tile {
   slug: string;
@@ -38,18 +38,7 @@ const tiles: Tile[] = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border px-6 py-4 flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <img src={tiptLogo} alt="TIPT" className="w-8 h-8" />
-          <span className="font-semibold text-foreground text-lg">
-            SANDBOX
-          </span>
-        </div>
-        <div className="ml-auto text-xs text-muted-foreground">
-          Lightning · HTTP 402
-        </div>
-      </header>
+      <AppHeader />
 
       {/* Hero */}
       <section className="px-6 pt-16 pb-10 text-center">
@@ -69,11 +58,6 @@ export default function Home() {
           ))}
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-border px-6 py-4 text-center text-xs text-muted-foreground">
-        Powered by the Lightning Network &middot; HTTP 402 Payment Required
-      </footer>
     </div>
   );
 }

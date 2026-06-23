@@ -64,7 +64,7 @@ async function isApiResponsive(port) {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1500);
-    const response = await fetch(`http://${apiHost}:${port}/api/theater/info`, {
+    const response = await fetch(`http://${apiHost}:${port}/api/healthz`, {
       signal: controller.signal,
     });
     clearTimeout(timeout);
