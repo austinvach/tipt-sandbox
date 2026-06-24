@@ -54,6 +54,17 @@ export default function Home() {
             <TileCard key={tile.slug} tile={tile} />
           ))}
         </div>
+
+        <div className="max-w-3xl mx-auto mt-6 text-center">
+          <a
+            href="https://mpp.dev/services"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors underline underline-offset-4"
+          >
+            Explore more services at mpp.dev/services
+          </a>
+        </div>
       </main>
     </div>
   );

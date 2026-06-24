@@ -23,6 +23,23 @@ export interface StreamResult {
   duration: number;
 }
 
+export interface NewsPreview {
+  id: string;
+  title: string;
+  publishedAt: string;
+  summary: string;
+  excerpt: string;
+  articlePreview: string;
+  author: string;
+  price: string;
+  currency: string;
+  url?: string;
+}
+
+export interface NewsArticle extends NewsPreview {
+  fullArticle: string;
+}
+
 function normalizeFilm(raw: unknown): FilmInfo | null {
   if (!raw || typeof raw !== "object") {
     return null;
@@ -43,6 +60,56 @@ function normalizeFilm(raw: unknown): FilmInfo | null {
     price: film.price ?? "",
     currency: film.currency ?? "",
   };
+}
+
+function normalizeNewsPreview(raw: unknown): NewsPreview | null {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+
+  const news = raw as Record<string, unknown>;
+  const id = typeof news.id === "string" ? news.id : "";
+  const title = typeof news.title === "string" ? news.title : "";
+
+  if (!id || !title) {
+    return null;
+  }
+
+  return {
+    id,
+    title,
+    publishedAt: typeof news.publishedAt === "string" ? news.publishedAt : "",
+    summary: typeof news.summary === "string" ? news.summary : "",
+    excerpt: typeof news.excerpt === "string" ? news.excerpt : "",
+    articlePreview: typeof news.articlePreview === "string" ? news.articlePreview : "",
+    author: typeof news.author === "string" ? news.author : "",
+    price: typeof news.price === "string" ? news.price : "",
+    currency: typeof news.currency === "string" ? news.currency : "BTC",
+    url: typeof news.url === "string" ? news.url : undefined,
+  };
+}
+
+function extractFullArticle(raw: unknown): string {
+  if (!raw || typeof raw !== "object") {
+    return "";
+  }
+
+  const news = raw as Record<string, unknown>;
+  const candidates = [
+    news.fullArticle,
+    news.article,
+    news.content,
+    news.body,
+    news.text,
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) {
+      return candidate;
+    }
+  }
+
+  return "";
 }
 
 async function parseErrorMessage(response: Response, fallback: string): Promise<string> {
@@ -107,6 +174,57 @@ export async function fetchFilmInfo(): Promise<FilmInfo> {
     throw new Error("No films available");
   }
   return first;
+}
+
+export async function fetchNewsPreviews(limit = 10): Promise<NewsPreview[]> {
+  const safeLimit = Math.max(1, Math.min(20, Math.floor(limit)));
+  const target = `${API_BASE}/news`;
+
+  const response = await fetch(target);
+  if (!response.ok) {
+    const detail = await parseErrorMessage(response, `HTTP ${response.status}`);
+    throw new Error(`Failed to fetch news (${response.status}): ${detail}`);
+  }
+
+  const payload = await response.json();
+  if (!Array.isArray(payload)) {
+    throw new Error("Received invalid news payload");
+  }
+
+  const previews = payload
+    .map((item) => normalizeNewsPreview(item))
+    .filter((item): item is NewsPreview => item !== null)
+    .slice(0, safeLimit);
+
+  if (!previews.length) {
+    throw new Error("No news articles available");
+  }
+
+  return previews;
+}
+
+export async function fetchNewsPreview(): Promise<NewsPreview> {
+  const previews = await fetchNewsPreviews(1);
+  const first = previews[0];
+  if (!first) {
+    throw new Error("No news articles available");
+  }
+  return first;
+}
+
+export async function fetchNewsPreviewById(id: string): Promise<NewsPreview> {
+  const targetId = id.trim();
+  if (!targetId) {
+    throw new Error("Missing news article id");
+  }
+
+  const previews = await fetchNewsPreviews(20);
+  const match = previews.find((item) => item.id === targetId);
+  if (!match) {
+    throw new Error("News article not found");
+  }
+
+  return match;
 }
 
 export async function probeExtension(timeoutMs = 1500): Promise<boolean> {
@@ -187,6 +305,32 @@ export async function unlockStream(filmId: string): Promise<StreamResult> {
 
     throw new Error(`Stream unlock failed: ${message}`);
   }
+}
+
+export async function unlockNewsArticle(preview: NewsPreview): Promise<NewsArticle> {
+  console.log("[mpp] unlockNewsArticle: requesting paid article via SDK client", { id: preview.id });
+  const client = createLightningMppExtensionClient({
+    polyfill: false,
+    extensionProbeTimeoutMs: 1500,
+  });
+
+  const target = `${API_BASE}/news/${encodeURIComponent(preview.id)}`;
+  const response = await client.fetch(target, { method: "GET" });
+  if (!response.ok) {
+    const detail = await parseErrorMessage(response, response.statusText);
+    throw new Error(`News unlock failed: ${response.status} ${detail}`);
+  }
+
+  const payload = await response.json();
+  const fullArticle = extractFullArticle(payload);
+  if (!fullArticle) {
+    throw new Error("News unlock succeeded, but full article content was missing.");
+  }
+
+  return {
+    ...preview,
+    fullArticle,
+  };
 }
 
 export function formatDuration(seconds: number): string {
