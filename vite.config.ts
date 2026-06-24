@@ -6,8 +6,8 @@ import tailwindcss from "@tailwindcss/vite";
 const rawPort = process.env.PORT || "5173";
 const port = Number(rawPort);
 const projectRoot = path.resolve(import.meta.dirname);
-const sdkRoot = path.resolve(import.meta.dirname, "..", "..", "..", "sdk");
-const attachedAssetsRoot = path.resolve(import.meta.dirname, "..", "..", "attached_assets");
+const sdkRoot = path.resolve(import.meta.dirname, "..", "sdk");
+const attachedAssetsRoot = path.resolve(import.meta.dirname, "attached_assets");
 
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
@@ -68,6 +68,12 @@ export default defineConfig({
     port,
     host: "0.0.0.0",
     allowedHosts: true,
+    proxy: {
+      "/api": {
+        target: "https://mppapi.replit.app",
+        changeOrigin: true,
+      },
+    },
     fs: {
       strict: true,
       allow: [projectRoot, sdkRoot, attachedAssetsRoot],

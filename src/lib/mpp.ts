@@ -3,7 +3,7 @@ import {
   probeLightningMppExtension,
 } from "lightning-mpp-extension-sdk";
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) || "https://mppapi.replit.app/api";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) || "/api";
 
 export interface FilmInfo {
   id: string;

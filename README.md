@@ -1,6 +1,6 @@
-# Sandbox Workspace
+# TIPT Sandbox
 
-This folder is a `pnpm` monorepo used for sandboxed artifacts and supporting packages. It provides a Lightning 402 payment demo environment.
+This folder contains a single Vite + React app for Lightning 402 payment demos.
 
 ## Prerequisites
 
@@ -10,7 +10,6 @@ This folder is a `pnpm` monorepo used for sandboxed artifacts and supporting pac
 
 **Notes:**
 - The workspace enforces `pnpm` via a preinstall check.
-- Some scripts (for example the API server `dev` script) use shell syntax that works best in bash.
 - This project was originally developed in Replit but can run entirely locally.
 
 ## Setup
@@ -27,35 +26,30 @@ pnpm install
 Run from `sandbox/`:
 
 ```bash
-pnpm run typecheck
 pnpm run build
 ```
 
-- `typecheck`: validates shared libs and selected workspace packages.
-- `build`: runs `typecheck` first, then runs package `build` scripts recursively.
-
 ## Architecture
 
-The sandbox currently runs as a client-first app that calls the hosted MPP API directly:
+The sandbox currently runs as a client-first app that calls `/api` on the same origin:
 
-- **Client** (`@workspace/client`): React/Vite frontend that calls `https://mppapi.replit.app/api` and integrates Lightning payment flows.
-- **Server** (`@workspace/server`): Optional local proxy/service layer for local experiments.
-- **Shared libs**: `@workspace/api-spec` (OpenAPI contract), `@workspace/api-zod` (validation schemas), `@workspace/db` (database schema).
+- **App**: React/Vite frontend at repository root.
+- **API**: `/api` is proxied/rewritten to `https://mppapi.replit.app/api`.
 
 Project-level standardized commands:
 
-- Server (`@workspace/server`): `dev`, `typecheck`, `build`, `preview`.
-- Client (`@workspace/client`): `dev`, `typecheck`, `build`, `preview`.
-- Shared libs (`@workspace/api-zod`, `@workspace/db`): `typecheck`, `build`.
+- `pnpm run dev`
+- `pnpm run build`
+- `pnpm run preview`
 
 ## Running the Application Locally
 
 ### Client
 
-The client works standalone and calls the hosted API directly by default:
+The client works standalone and calls `/api` by default:
 
 ```bash
-pnpm --filter @workspace/client run dev
+pnpm run dev
 ```
 
 Vite will print the local URL. The app includes two experiments:
@@ -66,18 +60,8 @@ Vite will print the local URL. The app includes two experiments:
 Optional: override the API base URL for client builds/runs:
 
 ```bash
-VITE_API_BASE_URL=https://mppapi.replit.app/api
+VITE_API_BASE_URL=/api
 ```
-
-### Optional local server
-
-If you still want to run the local server package:
-
-```bash
-pnpm --filter @workspace/server run dev
-```
-
-The server runs on `http://localhost:5000`.
 
 ## Deploying To Vercel
 
@@ -85,26 +69,12 @@ This repo is configured for frontend-only deployment on Vercel.
 
 1. Import the repository into Vercel.
 2. Keep the project root at `sandbox/`.
-3. Ensure the build command is `pnpm --filter @workspace/client run build`.
-4. Ensure output directory is `artifacts/client/dist`.
+3. Ensure the build command is `pnpm run build`.
+4. Ensure output directory is `dist`.
 5. Set `VITE_API_BASE_URL` only if you need a non-default API host.
 
-The included `vercel.json` handles SPA rewrites so routes like `/vod` work on refresh.
-
-## Helpful package-level commands
-
-```bash
-pnpm --filter @workspace/api-spec run codegen
-```
-
-- `codegen`: regenerate API hooks and schemas from OpenAPI
+The included `vercel.json` rewrites `/api/*` to the upstream MPP API and handles SPA routes like `/vod` on refresh.
 
 ## Troubleshooting
 
 - If install fails with "Use pnpm instead", run with `pnpm` only (not npm/yarn).
-- If server `dev` fails in PowerShell/CMD, run it in Git Bash/WSL or run `build` then `start` separately:
-
-```bash
-pnpm --filter @workspace/server run build
-pnpm --filter @workspace/server run start
-```
