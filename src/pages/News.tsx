@@ -14,7 +14,7 @@ const ARTICLE_PARAGRAPHS = [
   "Nam volutpat, nunc in eleifend aliquam, massa lectus pellentesque quam, vitae sodales ipsum est nec orci. Nunc rutrum elit et nunc dictum, vel scelerisque tortor convallis. Nulla in sapien id orci tincidunt sodales non quis eros.",
 ];
 
-export default function NewsPaywall() {
+export default function News() {
   const [film, setFilm] = useState<FilmInfo | null>(null);
   const [hasExtension, setHasExtension] = useState<boolean | null>(null);
   const [loadError, setLoadError] = useState("");

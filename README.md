@@ -2,28 +2,15 @@
 
 This folder contains a single Vite + React app for Lightning 402 payment demos.
 
-## Prerequisites
-
-- Node.js 24.x
-- pnpm 10+
-- A bash-like shell on Windows (Git Bash/WSL) is recommended
-
-**Notes:**
-- The workspace enforces `pnpm` via a preinstall check.
-- This project was originally developed in Replit but can run entirely locally.
-
 ## Setup
 
 From this folder:
 
 ```bash
-cd sandbox
 pnpm install
 ```
 
 ## Build Process
-
-Run from `sandbox/`:
 
 ```bash
 pnpm run build
@@ -55,7 +42,7 @@ pnpm run dev
 Vite will print the local URL. The app includes two experiments:
 
 - `/vod` (Video On-Demand)
-- `/sdk-demo` (SDK Payment Playground)
+- `/news` (News Article Paywall)
 
 Optional: override the API base URL for client builds/runs:
 

@@ -3,9 +3,8 @@ import { Switch, Route, Router as WouterRouter } from "wouter";
 
 const NotFound = lazy(() => import("@/pages/not-found"));
 const Home = lazy(() => import("@/pages/Home"));
-const Theater = lazy(() => import("@/pages/Theater"));
-const SdkDemo = lazy(() => import("@/pages/SdkDemo"));
-const NewsPaywall = lazy(() => import("@/pages/NewsPaywall"));
+const Movies = lazy(() => import("@/pages/Movies"));
+const News = lazy(() => import("@/pages/News"));
 
 function RouteFallback() {
   return (
@@ -19,9 +18,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/vod" component={Theater} />
-      <Route path="/sdk-demo" component={SdkDemo} />
-      <Route path="/news-paywall" component={NewsPaywall} />
+      <Route path="/vod" component={Movies} />
+      <Route path="/news" component={News} />
       <Route component={NotFound} />
     </Switch>
   );
