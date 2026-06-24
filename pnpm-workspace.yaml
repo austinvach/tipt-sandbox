@@ -4,9 +4,6 @@ minimumReleaseAgeExclude:
   - '@replit/*'
   - stripe-replit-sync
 
-packages:
-  - ../sdk
-
 onlyBuiltDependencies:
   - esbuild
   - protobufjs

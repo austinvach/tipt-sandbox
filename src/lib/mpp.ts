@@ -1,9 +1,9 @@
 import {
   createLightningMppExtensionClient,
-  probeLightningMppExtension,
 } from "lightning-mpp-extension-sdk";
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) || "/api";
+const MPP_EXTENSION_EVENT = "mpp:extension";
 
 export interface FilmInfo {
   id: string;
@@ -112,7 +112,43 @@ export async function fetchFilmInfo(): Promise<FilmInfo> {
 export async function probeExtension(timeoutMs = 1500): Promise<boolean> {
   console.log("[mpp] probeExtension: probing via SDK");
   try {
-    const response = await probeLightningMppExtension({ timeoutMs });
+    const response = await new Promise<unknown>((resolve, reject) => {
+      if (typeof window === "undefined") {
+        reject(new Error("MPP extension probing requires a browser window context."));
+        return;
+      }
+
+      const timer = window.setTimeout(() => {
+        cleanup();
+        reject(new Error("MPP extension was not detected on this page."));
+      }, timeoutMs);
+
+      const onResponse = (event: Event) => {
+        const detail = (event as CustomEvent).detail;
+        if (detail?.type !== "response") {
+          return;
+        }
+
+        cleanup();
+        resolve(detail);
+      };
+
+      const cleanup = () => {
+        window.clearTimeout(timer);
+        window.removeEventListener(MPP_EXTENSION_EVENT, onResponse);
+      };
+
+      window.addEventListener(MPP_EXTENSION_EVENT, onResponse);
+      window.dispatchEvent(
+        new CustomEvent(MPP_EXTENSION_EVENT, {
+          detail: {
+            type: "request",
+            paymentMethods: ["lightning"],
+            intents: ["charge"],
+          },
+        }),
+      );
+    });
     console.log("[mpp] probeExtension: extension responded", response);
     return true;
   } catch (error) {

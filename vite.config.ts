@@ -6,7 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 const rawPort = process.env.PORT || "5173";
 const port = Number(rawPort);
 const projectRoot = path.resolve(import.meta.dirname);
-const sdkRoot = path.resolve(import.meta.dirname, "..", "sdk");
 const attachedAssetsRoot = path.resolve(import.meta.dirname, "attached_assets");
 
 if (Number.isNaN(port) || port <= 0) {
@@ -19,7 +18,6 @@ export default defineConfig({
     alias: {
       "@": path.resolve(projectRoot, "src"),
       "@assets": attachedAssetsRoot,
-      "lightning-mpp-extension-sdk": path.resolve(sdkRoot, "src", "index.ts"),
     },
   },
   build: {
@@ -76,7 +74,7 @@ export default defineConfig({
     },
     fs: {
       strict: true,
-      allow: [projectRoot, sdkRoot, attachedAssetsRoot],
+      allow: [projectRoot, attachedAssetsRoot],
     },
   },
   preview: {
