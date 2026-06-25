@@ -6,6 +6,7 @@ const Home = lazy(() => import("@/pages/Home"));
 const Movies = lazy(() => import("@/pages/Movies"));
 const News = lazy(() => import("@/pages/News"));
 const NewsArticle = lazy(() => import("@/pages/NewsArticle"));
+const Image = lazy(() => import("@/pages/Image"));
 
 function RouteFallback() {
   return (
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/vod" component={Movies} />
       <Route path="/news/:id" component={NewsArticle} />
       <Route path="/news" component={News} />
+      <Route path="/image-gen" component={Image} />
       <Route component={NotFound} />
     </Switch>
   );

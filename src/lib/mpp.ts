@@ -40,6 +40,10 @@ export interface NewsArticle extends NewsPreview {
   fullArticle: string;
 }
 
+export interface PremiumImageRequest {
+  prompt: string;
+}
+
 function normalizeFilm(raw: unknown): FilmInfo | null {
   if (!raw || typeof raw !== "object") {
     return null;
@@ -331,6 +335,39 @@ export async function unlockNewsArticle(preview: NewsPreview): Promise<NewsArtic
     ...preview,
     fullArticle,
   };
+}
+
+export async function unlockGeneratedImage({
+  prompt,
+}: PremiumImageRequest): Promise<Blob> {
+  const trimmedPrompt = prompt.trim();
+  if (!trimmedPrompt) {
+    throw new Error("Missing generation prompt.");
+  }
+
+  const client = createLightningMppExtensionClient({
+    polyfill: false,
+    extensionProbeTimeoutMs: 1500,
+  });
+
+  const target = `${API_BASE}/image`;
+
+  const response = await client.fetch(target, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      prompt: trimmedPrompt,
+    }),
+  });
+
+  if (!response.ok) {
+    const detail = await parseErrorMessage(response, response.statusText);
+    throw new Error(`Image generation failed (${response.status}): ${detail}`);
+  }
+
+  return await response.blob();
 }
 
 export function formatDuration(seconds: number): string {

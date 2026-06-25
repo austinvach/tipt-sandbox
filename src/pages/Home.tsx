@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Film, Newspaper } from "lucide-react";
+import { Film, Newspaper, WandSparkles } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 
 interface Tile {
@@ -30,6 +30,15 @@ const tiles: Tile[] = [
     icon: <Newspaper className="w-7 h-7" />,
     accent: "from-green-600/20 to-green-600/5 border-green-600/30",
   },
+  {
+    slug: "image-gen",
+    href: "/image-gen",
+    label: "Image Gen",
+    description:
+      "Upload a reference photo and generate a stylized card image using a fixed prompt.",
+    icon: <WandSparkles className="w-7 h-7" />,
+    accent: "from-green-600/20 to-green-600/5 border-green-600/30",
+  },
 ];
 
 export default function Home() {
@@ -49,7 +58,7 @@ export default function Home() {
 
       {/* Tile grid */}
       <main className="flex-1 px-6 pb-16">
-        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {tiles.map((tile) => (
             <TileCard key={tile.slug} tile={tile} />
           ))}
