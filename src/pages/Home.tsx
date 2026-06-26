@@ -15,9 +15,9 @@ const tiles: Tile[] = [
   {
     slug: "vod",
     href: "/vod",
-    label: "Video On-Demand (VOD)",
+    label: "Video On-Demand",
     description:
-      "Pay-per-view streaming gated by a Lightning invoice. One payment, instant access.",
+      "Pay-per-view streaming. No log-in required.",
     icon: <Film className="w-7 h-7" />,
     accent: "from-green-600/20 to-green-600/5 border-green-600/30",
   },
@@ -26,7 +26,7 @@ const tiles: Tile[] = [
     href: "/news",
     label: "Article Paywall",
     description:
-      "Long-form article content gated by a paywall overlay that requires payment before reading.",
+      "Long-form article gated by a paywall that requires payment before reading.",
     icon: <Newspaper className="w-7 h-7" />,
     accent: "from-green-600/20 to-green-600/5 border-green-600/30",
   },
@@ -35,7 +35,7 @@ const tiles: Tile[] = [
     href: "/image-gen",
     label: "Image Gen",
     description:
-      "Upload a reference photo and generate a stylized card image using a fixed prompt.",
+      "Generate a stylized image using a fixed prompt.",
     icon: <WandSparkles className="w-7 h-7" />,
     accent: "from-green-600/20 to-green-600/5 border-green-600/30",
   },

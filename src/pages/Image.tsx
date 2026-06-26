@@ -9,7 +9,7 @@ Build the image with atmospheric texture, vivid yet harmonious color relationshi
 
 Creative direction from the user: {USER_PROMPT}
 
-Overall composition: perfectly flat, polished fine-art portrait or scene with elegant structure, rich surface texture, and strong visual cohesion. No graphic card layout, no logo, no label plate, no decorative border, and no extra white margin around the artwork.`;
+Overall composition: polished fine-art portrait or scene with elegant structure, rich surface texture, and strong visual cohesion. No graphic card layout, no logo, no label plate, no decorative border, and no extra white margin around the artwork. The artwork should fill the entire image.`;
 
 function buildPrompt(userPrompt: string): string {
   return POINTILLISM_TEMPLATE.replaceAll("{USER_PROMPT}", userPrompt.trim());
@@ -95,7 +95,7 @@ export default function ImageGen() {
           <section className="mx-auto max-w-2xl">
             <form onSubmit={handleGenerate} className="rounded-2xl border border-border bg-card p-6 space-y-5">
               <div>
-                <h1 className="text-2xl font-bold">Pointillism Image Demo</h1>
+                <h1 className="text-2xl font-bold">Pointillism Image Gen</h1>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Describe the piece you want to generate, then pay via MPP to create the artwork.
                 </p>
@@ -106,7 +106,7 @@ export default function ImageGen() {
                 <textarea
                   value={userPrompt}
                   onChange={(event) => setUserPrompt(event.target.value)}
-                  placeholder="e.g. riverside portrait at sunset with vibrant pointillist color dots"
+                  placeholder="e.g. riverside at sunset"
                   rows={4}
                   className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30"
                 />
@@ -141,7 +141,6 @@ export default function ImageGen() {
                   </>
                 ) : (
                   <>
-                    <WandSparkles className="h-4 w-4" />
                     Generate Artwork
                   </>
                 )}
