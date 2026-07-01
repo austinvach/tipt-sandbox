@@ -285,6 +285,8 @@ export async function unlockStream(filmId: string): Promise<StreamResult> {
   const client = createLightningMppExtensionClient({
     polyfill: false,
     extensionProbeTimeoutMs: 1500,
+    preferSpark: true,
+    includeSparkInvoice: true,
   });
 
   const target = `${API_BASE}/movies/${encodeURIComponent(filmId)}`;
@@ -316,6 +318,8 @@ export async function unlockNewsArticle(preview: NewsPreview): Promise<NewsArtic
   const client = createLightningMppExtensionClient({
     polyfill: false,
     extensionProbeTimeoutMs: 1500,
+    preferSpark: true,
+    includeSparkInvoice: true,
   });
 
   const target = `${API_BASE}/news/${encodeURIComponent(preview.id)}`;
@@ -348,6 +352,8 @@ export async function unlockGeneratedImage({
   const client = createLightningMppExtensionClient({
     polyfill: false,
     extensionProbeTimeoutMs: 1500,
+    preferSpark: true,
+    includeSparkInvoice: true,
   });
 
   const target = `${API_BASE}/image`;
