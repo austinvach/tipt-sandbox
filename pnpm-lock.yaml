@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       lightning-mpp-extension-sdk:
-        specifier: github:gettipt/sdk#da5e716bef4061e752a68a2a508f13b3269b2752
+        specifier: git+https://github.com/gettipt/sdk.git#da5e716bef4061e752a68a2a508f13b3269b2752
         version: https://codeload.github.com/gettipt/sdk/tar.gz/da5e716bef4061e752a68a2a508f13b3269b2752(bare-buffer@3.6.1)(bare-events@2.9.1)(bare-pipe@4.2.2(bare-buffer@3.6.1))(react@19.1.0)(typescript@5.9.3)(ws@8.21.0)(zod@4.4.3)
       lucide-react:
         specifier: ^0.545.0
