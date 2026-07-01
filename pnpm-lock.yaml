@@ -1080,7 +1080,7 @@ packages:
     resolution: {integrity: sha512-3QEofgiBOP4Ehs9BI+RkZdXZNtSys0nsJ6fyGeSiAGCBsMwHGUDS/JQlY/sTnWs91A2Nh0S9XXfA8Sy9g6QpuQ==}
 
   lightning-mpp-extension-sdk@https://codeload.github.com/gettipt/sdk/tar.gz/da5e716bef4061e752a68a2a508f13b3269b2752:
-    resolution: {gitHosted: true, integrity: sha512-f/Z5uNR/Vkm+50TDoWA6gfy5w6QbZ8Bbk1D2pV9lHLK0HQB8GTHlKND7HQAOZ2lOxP0ytdqNlMrlfgZgn7slBg==, tarball: https://codeload.github.com/gettipt/sdk/tar.gz/da5e716bef4061e752a68a2a508f13b3269b2752}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/gettipt/sdk/tar.gz/da5e716bef4061e752a68a2a508f13b3269b2752}
     version: 0.1.2
     engines: {node: '>=18'}
 
